@@ -42,7 +42,7 @@ export default app
     }
 
     // Retreive location specific stories given a "page number" -> 10 stories per page
-    async function getSacStories(pageNumber) {
+    async function getSacStories(pageNumber: string) {
         const key = await fetchKey();
         return new Promise((resolve) => {
             fetch(SacUrl + key + "&page=" + pageNumber)
@@ -56,7 +56,7 @@ export default app
         });
     }
 
-    async function getDavisStories(pageNumber) {
+    async function getDavisStories(pageNumber: string) {
         const key = await fetchKey();
         return new Promise((resolve) => {
             fetch(DavisUrl + key + "&page=" + pageNumber)
@@ -71,7 +71,7 @@ export default app
     }
 
     // Gets stories from the two above functions and displays in a grid-like format 
-    async function createDom(pageNumber) {
+    async function createDom(pageNumber: number) {
         sacStories = await getSacStories(pageNumber);
         davisStories = await getDavisStories(pageNumber);
         for (let i = 0; i < 5; i++) {
@@ -134,7 +134,7 @@ export default app
     }
 
     //Populates html elements with information from story
-    function populateStories(header, snippet, image, link1, link2, story) {
+    function populateStories(header: HTMLHeadingElement, snippet: HTMLParagraphElement, image: HTMLImageElement, link1: HTMLAnchorElement, link2: HTMLAnchorElement, story: { headline: { main: any }; snippet: any; multimedia: { default: { url: any; width: any; height: any } }; web_url: any }) {
         header.innerText = story.headline.main;
         snippet.innerText = story.snippet;
         image.src = story.multimedia.default.url;
@@ -154,9 +154,9 @@ export default app
     });
 
     //Prevent scroll from getting called multiple times within 200 milliseconds of each other
-    function debounce(func, timeout = 200) {
-        let timer;
-        return function(...args) {
+    function debounce(func: { (): void; apply?: any }, timeout = 200) {
+        let timer: number | undefined;
+        return function(...args: any) {
             const context = this;
             clearTimeout(timer);
             timer = setTimeout(() => { func.apply(context, args); }, timeout);

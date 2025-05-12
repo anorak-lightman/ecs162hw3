@@ -8,7 +8,7 @@ template_path = os.getenv('TEMPLATE_PATH','templates')
 # Mongo connection
 mongo_uri = os.getenv("MONGO_URI")
 mongo = MongoClient(mongo_uri)
-db = mongo.get_default_database()
+# db = mongo.get_default_database()
 
 
 app = Flask(__name__, static_folder=static_path, template_folder=template_path)
