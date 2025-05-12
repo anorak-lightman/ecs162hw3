@@ -1,0 +1,31 @@
+issuer: http://localhost:5556
+
+# Storage configuration to use MongoDB
+storage:
+  type: mongo
+  config:
+    uri: ${MONGO_URI}  # Use environment variable MONGO_URI from Docker Compose
+    collection: dex  # Optional: collection name for storing Dex data
+
+web:
+  http: 0.0.0.0:5556
+
+staticClients:
+  - id: ${OIDC_CLIENT_ID}
+    redirectURIs:
+      - http://localhost:8000/auth/callback
+    name: ${OIDC_CLIENT_NAME}
+    secret: ${OIDC_CLIENT_SECRET}
+
+enablePasswordDB: true
+
+# Can create passwords using python
+# python -c "import bcrypt; print(bcrypt.hashpw(b'password', bcrypt.gensalt()).decode())"
+#staticPasswords:
+#  - email: alice@example.com
+#    hash: "$2a$10$CwTycUXWue0Thq9StjUM0uJ8DPLKXt1FYlwYpQW2G3cAwjKoh2WZK" # password = "password"
+#    username: alice
+#    userID: "123"
+
+oauth2:
+  skipApprovalScreen: true
