@@ -2,6 +2,11 @@ from flask import Flask, jsonify, send_from_directory
 import os
 from flask_cors import CORS
 from pymongo import MongoClient
+import requests
+import json
+
+sacramento_url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=Sacramento fq=timesTag.subject:"Sacramento" AND timesTag.location:"California"&api-key='
+davis_url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q="UC Davis"&api-key='
 
 static_path = os.getenv('STATIC_PATH','static')
 template_path = os.getenv('TEMPLATE_PATH','templates')
@@ -17,6 +22,23 @@ CORS(app)
 @app.route('/api/key')
 def get_key():
     return jsonify({'apiKey': os.getenv('NYT_API_KEY')})
+
+def internal_key_get():
+    return os.getenv('NYT_API_KEY')
+
+@app.route('/get_stories/<city>/<pageNumber>')
+def get_stories(city, pageNumber):
+    api_key = internal_key_get()
+    url = ''
+    if city == 'sacramento':
+        url = sacramento_url + api_key + '&page=' + pageNumber
+    elif city == 'davis':
+        url = davis_url + api_key + '&page=' + pageNumber
+    res = requests.get(url)
+    response = json.loads(res.text)
+    print(response)
+    stories = response["response"]["docs"]
+    return jsonify({"stories": stories})
 
 @app.route('/')
 @app.route('/<path:path>')

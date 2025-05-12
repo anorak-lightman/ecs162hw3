@@ -20,60 +20,43 @@ export default app
         document.getElementById("formattedDate").innerText = formattedDate;
         console.log(formattedDate);
     }
-
-    // Grab location specific articles
-    let SacUrl = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=Sacramento fq=timesTag.subject:"Sacramento" AND timesTag.location:"California"&api-key=';
-    let DavisUrl = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q="UC Davis"&api-key=';
+    
     let curPage = 0;
     let sacStories = [];
     let davisStories = [];
 
-    function fetchKey() {
-        return new Promise((resolve) => {
-            fetch("http://127.0.0.1:8000/api/key")
-                .then(response => response.json())
-                .then(data => {
-                    resolve(data.apiKey);
-                })
-                .catch(error => {
-                    console.error("error fetching key", error);
-                });
-        });
-    }
-
     // Retreive location specific stories given a "page number" -> 10 stories per page
-    async function getSacStories(pageNumber: string) {
-        const key = await fetchKey();
-        return new Promise((resolve) => {
-            fetch(SacUrl + key + "&page=" + pageNumber)
-                .then(response => response.json())
-                .then(data => {
-                    resolve(data.response.docs);
-                })
-                .catch(error => {
-                    console.error("error getting sacramento stories", error);
-                });
-        });
+    function getSacStoriesFromBackend(pageNumber: number) {
+      return new Promise((resolve) => {
+        fetch("http://127.0.0.1:8000/get_stories/sacramento/" + pageNumber)
+            .then(response => response.json())
+            .then(data => {
+              resolve(data.stories);
+            })
+            .catch(error => {
+              console.error("error fetching stories from flask", error);
+            });
+      });
     }
 
-    async function getDavisStories(pageNumber: string) {
-        const key = await fetchKey();
-        return new Promise((resolve) => {
-            fetch(DavisUrl + key + "&page=" + pageNumber)
-                .then(response => response.json())
-                .then(data => {
-                    resolve(data.response.docs);
-                })
-                .catch(error => {
-                    console.error("error getting davis stories", error);
-                });
-        });
+
+    function getDavisStoriesFromBackend(pageNumber: number) {
+      return new Promise((resolve) => {
+        fetch("http://127.0.0.1:8000/get_stories/davis/" + pageNumber)
+            .then(response => response.json())
+            .then(data => {
+              resolve(data.stories);
+            })
+            .catch(error => {
+              console.error("error fetching stories from flask", error);
+            });
+      });
     }
 
     // Gets stories from the two above functions and displays in a grid-like format 
     async function createDom(pageNumber: number) {
-        sacStories = await getSacStories(pageNumber);
-        davisStories = await getDavisStories(pageNumber);
+        sacStories = await getSacStoriesFromBackend(pageNumber);
+        davisStories = await getDavisStoriesFromBackend(pageNumber);
         for (let i = 0; i < 5; i++) {
             let col = document.getElementsByClassName("row1col left-col")[0];
 
