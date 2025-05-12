@@ -1,8 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import svelteLogo from './assets/svelte.svg';
-  import viteLogo from '/vite.svg';
-  import Counter from './lib/Counter.svelte';
 
   let apiKey: string = '';
 
@@ -18,31 +15,54 @@
 </script>
 
 <main>
-  <div>
-    <a href="https://vite.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
+  <head>
+        <meta charset="UTF-8">
+        <title>The New York Times</title>
+        <link rel = "stylesheet" href = "../static/style.css">
 
-  <div class="card">
-    <Counter />
-  </div>
+    </head>
 
-  <p>
-    Your API Key: <strong>{apiKey}</strong>
-  </p>
+    <body>
+        <header>
+            <div>
+                <ul class = "locations">
+                    <li><a href = "https://www.nytimes.com/">U.S.</a></li>
+                    <li><a href = "https://www.nytimes.com/international/">INTERNATIONAL</a></li>
+                    <li><a href = "https://www.nytimes.com/ca/">CANADA</a></li>
+                    <li><a href = "https://www.nytimes.com/es/">ESPAÑOL</a></li>
+                    <li><a href = "https://cn.nytimes.com/">中文</a></li>
+                </ul>
+            </div>
 
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
+            <div class = "header">
+                <div class="header-left">
+                    <p id="formattedDate"></p>
+                    <p class="today">Today's Paper</p>
+                </div>
+                <div class="header-center"><a href="https://nytimes.com"><h1 class = "title">The New York Times</h1></a></div>
+                <div class="header-right"></div>
+            </div>
 
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
+            <hr class="header-border">
+        </header>
+        <section>
+            <div class="grid-container">
+                <div class="grid">
+                    <div class="row1col left-col"></div>
+    
+                    <div class="row1col center-col"></div>
+
+                    <div class="row1col right-col"></div>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <br>
+            <hr class="footer">
+            <a href="https://developer.nytimes.com"><img src="../static/images/poweredby_nytimes_200a.png" width = 200px></a>
+        </footer>
+        <script src = "../static/main.js"></script>
+    </body>
 </main>
 
 <style>
