@@ -38,17 +38,16 @@ services:
       - .env.dev
     volumes:
       - mongo_data:/data/db
-      #- ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js  # Mount the init script here
 
   dex:
-    image: ghcr.io/dexidp/dex:v2.37.0
+    build:
+      context: .
+      dockerfile: Dockerfile.dex
     container_name: dex
     volumes:
       - ./config/dex:/etc/dex
     ports:
       - "5556:5556"
-    depends_on:
-      - mongo
     env_file:
       - .env
       - .env.dev
