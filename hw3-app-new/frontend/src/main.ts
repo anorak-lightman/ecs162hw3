@@ -144,14 +144,14 @@ export default app
     //Infinate Scroll (not that infinite due to api calling time limits and restrictions)
     const loadMorePagesOnScroll = debounce(() => {
         const endOfPage = window.innerHeight + window.pageYOffset + 2500 >= document.body.offsetHeight;
-        if (endOfPage && curPage <= 3) {
+        if (endOfPage && curPage <= 10) {
             curPage++;
             createDom(curPage);
         }
     });
 
-    //Prevent scroll from getting called multiple times within 200 milliseconds of each other
-    function debounce(func: { (): void; apply?: any }, timeout = 200) {
+    //Prevent scroll from getting called multiple times within 400 milliseconds of each other
+    function debounce(func: { (): void; apply?: any }, timeout = 400) {
         let timer: number | undefined;
         return function(...args: any) {
             const context = this;
