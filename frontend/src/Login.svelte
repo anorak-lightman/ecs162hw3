@@ -6,7 +6,7 @@
 
 <main>
     <meta charset="UTF-8">
-    <title>The New York Times</title>
+    <title>Login Page</title>
         <header>
             <div>
                 <p>Log in or create an account</p>

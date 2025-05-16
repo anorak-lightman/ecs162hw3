@@ -4,9 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
+    <link rel = "stylesheet" href = "style.css"/>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="login">
+        <div class="title-container">
+            <p class="title">The New York Times</p>
+        </div>
+    </div>
+
+    <div class="content">
+        <p class="login-title">
+        Log in or create an account
+        </p>
+        <div class="email-form">
+            <form>
+                <label class = "email-label" for="email-address">Email Address</label><br>
+                <input type="text" id="email-address" name="email-address"><br>
+                <input class="input-submit" type="submit" value="Continue">
+            </form>
+        </div>
+        <div>
+            <p class="or">or</p>
+            <p class="terms-conditions">By continuing, you agree to the
+                <a href = "https://help.nytimes.com/hc/en-us/articles/115014893968-Terms-of-Sale">Terms of Sale,</a>
+                <a href = "https://help.nytimes.com/hc/en-us/articles/115014893428-Terms-of-Service">Terms of Service,</a>
+                <a href = "https://help.nytimes.com/hc/en-us/articles/10940941449492-The-New-York-Times-Company-Privacy-Policy">and Privacy Policy.</a>
+            </p>
+            <!-- <button>Continue with Google</button>
+            <button>Continue with Facebook</button>
+            <button>Continue with Apple</button>
+            <br>
+            <a href = "https://emojipedia.org/apple/ios-10.2/face-with-tongue">Continue with work or school single sign-on ></a> -->
+        </div>
     <script type="module" src="/src/login.ts"></script>
   </body>
 </html>
