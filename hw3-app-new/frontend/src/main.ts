@@ -25,6 +25,16 @@ export default app
     let sacStories = [];
     let davisStories = [];
 
+    async function login() {
+      console.log("clicked button");
+      await fetch("http://127.0.0.1:8000/home")
+        .then(response => response.text())
+        .then(htmlString => {
+          console.log(htmlString);
+          document.body.innerHTML = htmlString;
+        });
+    }
+
     // Retreive location specific stories given a "page number" -> 10 stories per page
     function getSacStoriesFromBackend(pageNumber: number) {
       return new Promise((resolve) => {
@@ -165,5 +175,7 @@ export default app
     createDom(curPage);
     function init() {
         window.addEventListener("scroll", loadMorePagesOnScroll);
+        let login_button = document.getElementById("login_button");
+        login_button.addEventListener("click", login)
     }
 })();

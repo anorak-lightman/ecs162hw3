@@ -10,7 +10,7 @@ from flask_cors import CORS
 static_path = os.getenv('STATIC_PATH','static')
 template_path = os.getenv('TEMPLATE_PATH','templates')
 app = Flask(__name__, static_folder=static_path, template_folder=template_path)
-CORS(app)
+
 app.secret_key = os.urandom(24)
 
 
@@ -31,7 +31,7 @@ oauth.register(
     device_authorization_endpoint="http://dex:5556/device/code",
     client_kwargs={'scope': 'openid email profile'}
 )
-
+CORS(app)
 sacramento_url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=Sacramento fq=timesTag.subject:"Sacramento" AND timesTag.location:"California"&api-key='
 davis_url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q="UC Davis"&api-key='
 
@@ -65,42 +65,39 @@ def get_stories(city, pageNumber):
         return jsonify({"stories": "can't load more"})
 
 
-@app.route('/')
+# @app.route('/')
 @app.route('/<path:path>')
 def serve_frontend(path=''):
     if path != '' and os.path.exists(os.path.join(static_path,path)):
         return send_from_directory(static_path, path)
     return send_from_directory(template_path, 'index.html')
 
-@app.route('/')
+@app.route('/home')
 def home():
     user = session.get('user')
     if user:
-        return f"<h2>Logged in as {user['email']}</h2><a href='/logout'>Logout</a>"
-    return '<a href="/login">Login with Dex</a>'
+        return f"<h2>Logged in as {user['email']}</h2><a href='http://localhost:8000/logout'>Logout</a>"
+    return '<a href="http://localhost:8000/login" id="login">Login with Dex</a>'
 
 @app.route('/login')
 def login():
     session['nonce'] = nonce
     redirect_uri = 'http://localhost:8000/authorize'
-    print(session)
     return oauth.flask_app.authorize_redirect(redirect_uri, nonce=nonce)
 
 @app.route('/authorize')
 def authorize():
-    print(session)
     token = oauth.flask_app.authorize_access_token()
-    print(session)
     nonce = session.get('nonce')
 
     user_info = oauth.flask_app.parse_id_token(token, nonce=nonce)  # or use .get('userinfo').json()
     session['user'] = user_info
-    return redirect('/')
+    return redirect('/home')
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect('/')
+    return redirect('/home')
 
 @app.route("/test-mongo")
 def test_mongo():

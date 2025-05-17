@@ -34,7 +34,9 @@
                     <p class="today">Today's Paper</p>
                 </div>
                 <div class="header-center"><a href="https://nytimes.com"><h1 class = "title">The New York Times</h1></a></div>
-                <div class="header-right"></div>
+                <div class="header-right">
+                    <input type="button" value="Login" id="login_button">
+                </div>
             </div>
 
             <hr class="header-border">
