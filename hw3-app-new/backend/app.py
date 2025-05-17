@@ -23,7 +23,7 @@ oauth.register(
     name=os.getenv('OIDC_CLIENT_NAME'),
     client_id=os.getenv('OIDC_CLIENT_ID'),
     client_secret=os.getenv('OIDC_CLIENT_SECRET'),
-    #server_metadata_url='http://dex:5556/.well-known/openid-configuration',
+    # server_metadata_url='http://dex:5556/.well-known/openid-configuration',
     authorization_endpoint="http://localhost:5556/auth",
     token_endpoint="http://dex:5556/token",
     jwks_uri="http://dex:5556/keys",
@@ -83,11 +83,14 @@ def home():
 def login():
     session['nonce'] = nonce
     redirect_uri = 'http://localhost:8000/authorize'
+    print(session)
     return oauth.flask_app.authorize_redirect(redirect_uri, nonce=nonce)
 
 @app.route('/authorize')
 def authorize():
+    print(session)
     token = oauth.flask_app.authorize_access_token()
+    print(session)
     nonce = session.get('nonce')
 
     user_info = oauth.flask_app.parse_id_token(token, nonce=nonce)  # or use .get('userinfo').json()
