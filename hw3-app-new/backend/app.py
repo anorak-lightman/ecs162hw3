@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, session, jsonify, send_from_directory
+from flask import Flask, redirect, url_for, session, jsonify, send_from_directory, g
 from authlib.integrations.flask_client import OAuth
 from authlib.common.security import generate_token
 import os
@@ -13,6 +13,10 @@ app = Flask(__name__, static_folder=static_path, template_folder=template_path)
 
 app.secret_key = os.urandom(24)
 
+app.config.update(
+    SESSION_COOKIE_SAMESITE='Lax',
+    SESSION_COOKIE_SECURE=False,
+)
 
 oauth = OAuth(app)
 
@@ -31,7 +35,7 @@ oauth.register(
     device_authorization_endpoint="http://dex:5556/device/code",
     client_kwargs={'scope': 'openid email profile'}
 )
-CORS(app)
+CORS(app, supports_credentials=True, origins=['http://localhost:5173'])
 sacramento_url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=Sacramento fq=timesTag.subject:"Sacramento" AND timesTag.location:"California"&api-key='
 davis_url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q="UC Davis"&api-key='
 
@@ -92,12 +96,25 @@ def authorize():
 
     user_info = oauth.flask_app.parse_id_token(token, nonce=nonce)  # or use .get('userinfo').json()
     session['user'] = user_info
-    return redirect('/home')
+    session['user_type'] = user_info['name']
+    return redirect('http://localhost:5173')
 
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect('/home')
+    return jsonify({"message": "Logged out"}), 200
+
+@app.route("/is_signed_in")
+def is_signed_in():
+    if 'user' in session:
+        return jsonify({"signed_in": True})
+    return jsonify({"signed_in": False})
+
+@app.route("/get_user_type")
+def get_user_type():
+    if 'user' in session:
+        return jsonify({"user_type": session.get("user_type")})
+    return jsonify({"error": "not signed in"})
 
 @app.route("/test-mongo")
 def test_mongo():

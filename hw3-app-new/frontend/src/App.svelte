@@ -35,7 +35,7 @@
                 </div>
                 <div class="header-center"><a href="https://nytimes.com"><h1 class = "title">The New York Times</h1></a></div>
                 <div class="header-right">
-                    <input type="button" value="Login" id="login_button">
+                    <button id="login_button">Login</button>
                 </div>
             </div>
 

@@ -24,21 +24,82 @@ export default app
     let curPage = 0;
     let sacStories = [];
     let davisStories = [];
+    
+    let myInterval = null;
+    let user = null;
+    myInterval = setInterval(check_signed_in, 1000);
+    async function get_user_type() {
+      await fetch("http://localhost:8000/get_user_type", {method: 'GET', credentials: 'include',})
+        .then(response => response.json())
+        .then(data => {
+          let user_type = data.user_type;
+          if (user_type === "admin") {
+            user = "admin";
+          } else if (user_type === "moderator") {
+            user = "moderator";
+          } else {
+            user = "user";
+          }
+          clearInterval(myInterval);
+          console.log(user);
+          let login_button = document.getElementById("login_button");
+          login_button.innerText = "Logout";
+          login_button.removeEventListener('click', login);
+          login_button.addEventListener("click", logout);
+        })
+        .catch(error => {
+          console.error("error getting user type", error);
+        });
+    }
+
+    async function logout() {
+      await fetch ("http://localhost:8000/logout", {method: 'GET', credentials: 'include',})
+        .then(res => {
+          if (res.ok) {
+            let login_button = document.getElementById("login_button");
+            login_button.removeEventListener("click", logout);
+            login_button.addEventListener("click", login);
+            login_button.innerText = "Login";
+            myInterval = setInterval(check_signed_in, 1000);
+            user = null;
+          }
+        })
+        .catch(error => {
+          console.error("error logging out", error);
+        });
+    }
 
     async function login() {
-      console.log("clicked button");
-      await fetch("http://127.0.0.1:8000/home")
+      await fetch("http://localhost:8000/home")
         .then(response => response.text())
         .then(htmlString => {
           console.log(htmlString);
           document.body.innerHTML = htmlString;
+        })
+        .catch(error => {
+          console.error("error logging in", error);
+        });
+    }
+
+    async function check_signed_in() {
+      console.log("checking signed in");
+      await fetch("http://localhost:8000/is_signed_in", {method: 'GET', credentials: 'include',})
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          if (data.signed_in === true) {
+            get_user_type();
+          }
+        })
+        .catch(error => {
+          console.error("erroring checking if signed in", error);
         });
     }
 
     // Retreive location specific stories given a "page number" -> 10 stories per page
     function getSacStoriesFromBackend(pageNumber: number) {
       return new Promise((resolve) => {
-        fetch("http://127.0.0.1:8000/get_stories/sacramento/" + pageNumber)
+        fetch("http://localhost:8000/get_stories/sacramento/" + pageNumber)
             .then(response => response.json())
             .then(data => {
               resolve(data.stories);
@@ -52,7 +113,7 @@ export default app
 
     function getDavisStoriesFromBackend(pageNumber: number) {
       return new Promise((resolve) => {
-        fetch("http://127.0.0.1:8000/get_stories/davis/" + pageNumber)
+        fetch("http://localhost:8000/get_stories/davis/" + pageNumber)
             .then(response => response.json())
             .then(data => {
               resolve(data.stories);
@@ -102,6 +163,7 @@ export default app
 
             let button = gridElement.appendChild(document.createElement("button"));
             button.className = "comment-button";
+            button.innerText = "comment";
             //Add inner text as image
             // button.addEventListener("click", () ={
               
@@ -128,6 +190,7 @@ export default app
 
             let button = gridElement.appendChild(document.createElement("button"));
             button.className = "comment-button";
+            button.innerText = "comment";
             //Add inner text as image
             // button.addEventListener("click", () ={
               
@@ -154,6 +217,7 @@ export default app
 
             let button = gridElement.appendChild(document.createElement("button"));
             button.className = "comment-button";
+            button.innerText = "comment";
             //Add inner text as image
             // button.addEventListener("click", () ={
               
@@ -172,7 +236,7 @@ export default app
         link2.href = story.web_url;
     }
 
-    //Infinate Scroll (not that infinite due to api calling time limits and restrictions)
+    //Infinite Scroll (not that infinite due to api calling time limits and restrictions)
     const loadMorePagesOnScroll = debounce(() => {
         const endOfPage = window.innerHeight + window.pageYOffset + 2500 >= document.body.offsetHeight;
         if (endOfPage && curPage <= 10) {
@@ -197,6 +261,6 @@ export default app
     function init() {
         window.addEventListener("scroll", loadMorePagesOnScroll);
         let login_button = document.getElementById("login_button");
-        login_button.addEventListener("click", login)
+        login_button.addEventListener("click", login);
     }
 })();
