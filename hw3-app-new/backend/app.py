@@ -127,8 +127,12 @@ def convert_objectid(doc):
 def find_comments(article_id):
     comments_cursor = db.comments.find({"ID": article_id})
     array_form = [convert_objectid(doc) for doc in comments_cursor]
-    comments = array_form[0]["comments"]
-    return jsonify({"comments": comments})
+    try:
+        comments = array_form[0]["comments"]
+        return jsonify({"comments": comments})
+    except:
+        return jsonify({"comments": []})
+    
 
 @app.route("/insert_article/<article_id>")
 def insert_article(article_id):

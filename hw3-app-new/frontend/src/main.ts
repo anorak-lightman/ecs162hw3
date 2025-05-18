@@ -108,9 +108,20 @@ export default app
       let comments_list = [[]];
       nyt_article = nyt_article.toLowerCase().replaceAll(' ', '-');
       comments_list = await get_comments(nyt_article);
+      console.log(nyt_article);
       console.log(comments_list);
+      let comments_header = document.getElementsByClassName("comments-title")[0];
       for (let i = 0; i < comments_list.length; i++) {
-        // add comments to comment side bar
+        for (let j = 0; j < comments_list[i].length; i++) {
+          if (j === 0) {
+            let comment = document.createElement("p");
+            comment.innerText = comments_list[i][j].replaceAll('-', ' ');
+            comments_header.parentNode.insertBefore(comment, comments_header.nextSibling);
+          } else {
+            let comment = document.createElement("p");
+            comment.innerText = "\t" + comments_list[i][j].replaceAll('-', ' ');
+          }
+        }
       }
     }
 
@@ -245,18 +256,14 @@ export default app
             commentsButton.id = "comment-button-id";
             commentsButton.innerText = "comment";
             //Add inner text as image
-            button.addEventListener("click", () => {
-              display_comments(sacStories[i].headline.main);
-            });
             commentsButton.addEventListener("click", () => {
               const commentsDiv = document.getElementById("comments-container-id");
-              console.log("Hello");
-              if(commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
+              if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
                 commentsDiv.style.display = "block";
-              }else{
+              } else{
                 commentsDiv.style.display = "none";
               }
-
+              display_comments(sacStories[i].headline.main);
             })
             // const commentsContainer = document.getElementById("comments-container");
 
