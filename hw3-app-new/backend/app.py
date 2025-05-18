@@ -127,8 +127,9 @@ def convert_objectid(doc):
 @app.route("/find_comments/<article_id>")
 def find_comments(article_id):
     comments_cursor = db.comments.find({"ID": article_id})
-    comments_list = [convert_objectid(doc) for doc in comments_cursor]
-    return jsonify({"comments": comments_list})
+    array_form = [convert_objectid(doc) for doc in comments_cursor]
+    comments = array_form[0]["comments"]
+    return jsonify({"comments": comments})
 
 @app.route("/insert_article/<article_id>")
 def insert_article(article_id):
@@ -144,9 +145,16 @@ def insert_comment(article_id, comment):
     article = find_comments_internal(article_id)
     if len(article) == 0:
         insert_article(article_id)
-        db.comments.update_one({"ID": article_id}, {"$push": {"comments": comment}})
+        db.comments.update_one({"ID": article_id}, {"$push": {"comments": [comment]}})
     else:
-        db.comments.update_one({"ID": article_id}, {"$push": {"comments": comment}})
+        db.comments.update_one({"ID": article_id}, {"$push": {"comments": [comment]}})
+    return jsonify({"success": article_id})
+
+@app.route("/insert_comment_to_other_comment/<article_id>/<int:comment_index>/<comments>")
+def insert_comment_to_other_comment(article_id, comment_index, comments):
+    comments = comments.split(',')
+    app.logger.info(comments)
+    db.comments.update_one({"ID": article_id}, {f"$set": {f"comments.{comment_index}": comments}})
     return jsonify({"success": article_id})
 
 if __name__ == '__main__':

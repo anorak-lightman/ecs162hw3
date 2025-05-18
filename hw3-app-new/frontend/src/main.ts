@@ -10,7 +10,7 @@ export default app
 
 
 "use strict";
-(function() {
+(async function() {
     // Date: Display current date
     function displayDate() {
         let todaysDate = new Date();
@@ -41,7 +41,6 @@ export default app
             user = "user";
           }
           clearInterval(myInterval);
-          console.log(user);
           let login_button = document.getElementById("login_button");
           login_button.innerText = "Logout";
           login_button.removeEventListener('click', login);
@@ -73,7 +72,6 @@ export default app
       await fetch("http://localhost:8000/home")
         .then(response => response.text())
         .then(htmlString => {
-          console.log(htmlString);
           document.body.innerHTML = htmlString;
         })
         .catch(error => {
@@ -82,17 +80,98 @@ export default app
     }
 
     async function check_signed_in() {
-      console.log("checking signed in");
       await fetch("http://localhost:8000/is_signed_in", {method: 'GET', credentials: 'include',})
         .then(response => response.json())
         .then(data => {
-          console.log(data);
           if (data.signed_in === true) {
             get_user_type();
           }
         })
         .catch(error => {
           console.error("erroring checking if signed in", error);
+        });
+    }
+
+    async function get_comments(nyt_article: string): Promise<[[string]]> {
+      return await fetch("http://localhost:8000/find_comments/" + nyt_article)
+        .then(response => response.json())
+        .then(data => {
+          return data.comments;
+        })
+        .catch(error => {
+          console.error("error getting comments", error)
+        });
+    }
+
+
+    async function display_comments(nyt_article: string) {
+      let comments_list = [[]];
+      nyt_article = nyt_article.toLowerCase().replaceAll(' ', '-');
+      comments_list = await get_comments(nyt_article);
+      console.log(comments_list);
+      for (let i = 0; i < comments_list.length; i++) {
+        // add comments to comment side bar
+      }
+    }
+
+    async function redact_comment(comment: string, nyt_article: string) {
+      let nyt_article_original = nyt_article;
+      nyt_article = nyt_article.toLowerCase().replaceAll(' ', '-');
+      comment = comment.replaceAll(' ', '-');
+      let comments = await get_comments(nyt_article);
+      const commentsArray = Object.values(comments);
+      let index = commentsArray.findIndex(inner => inner.includes(comment));
+      let innerArray = commentsArray[index];
+      let indexOfComment = innerArray.findIndex(inner => inner == comment);
+      innerArray[indexOfComment] = "COMMENT REMOVED BY MODERATOR!";
+      await fetch("http://localhost:8000/insert_comment_to_other_comment/" + nyt_article + "/" + index + "/" + innerArray)
+        .then(response => response.json())
+        .then(() => {
+          display_comments(nyt_article_original);
+        })
+        .catch(error => {
+          console.error("error redacting comment", error);
+        });
+    }
+
+    async function add_comment_to_article(comment: string, nyt_article: string) {
+      let nyt_article_original = nyt_article;
+      nyt_article = nyt_article.toLowerCase().replaceAll(' ', '-');
+      comment = comment.replaceAll(' ', '-');
+      await fetch("http://localhost:8000/insert_comment/" + nyt_article + "/" + comment)
+        .then(response => response.json())
+        .then(() => {
+          display_comments(nyt_article_original);
+        })
+        .catch(error => {
+          console.error("error adding comment", error);
+        });
+    }
+
+    async function get_comment_and_append_new_comment(comment: string, base_comment: string, nyt_article: string) {
+      nyt_article = nyt_article.toLowerCase().replaceAll(' ', '-');
+      let comments = await get_comments(nyt_article);
+      const commentsArray = Object.values(comments);
+      let index = commentsArray.findIndex(inner => inner.includes(base_comment.replaceAll(' ', '-')));
+      let old_comments = comments[index];
+      old_comments.push(comment.replaceAll(' ', '-'));
+      let new_comments = old_comments.join(",");
+      return [new_comments, index];
+    }
+
+    async function add_comment_to_other_comment(comment: string, base_comment: string, nyt_article: string) {
+      let original_nyt_article = nyt_article;
+      nyt_article = nyt_article.toLowerCase().replaceAll(' ', '-');
+      let comment_and_index = await get_comment_and_append_new_comment(comment, base_comment, original_nyt_article);
+      let new_comments = comment_and_index[0];
+      let index = comment_and_index[1];
+      await fetch("http://localhost:8000/insert_comment_to_other_comment/" + nyt_article + "/" + index + "/" + new_comments)
+        .then(response => response.json())
+        .then(() => {
+          display_comments(original_nyt_article);
+        })
+        .catch(error => {
+          console.error("error adding comment from other comment to database", error);
         });
     }
 
@@ -165,9 +244,9 @@ export default app
             button.className = "comment-button";
             button.innerText = "comment";
             //Add inner text as image
-            // button.addEventListener("click", () ={
-              
-            // })
+            button.addEventListener("click", () => {
+              display_comments(sacStories[i].headline.main);
+            });
         }
         for (let i = 5; i < 10; i++) {
             let col = document.getElementsByClassName("row1col center-col")[0];
@@ -192,9 +271,9 @@ export default app
             button.className = "comment-button";
             button.innerText = "comment";
             //Add inner text as image
-            // button.addEventListener("click", () ={
-              
-            // })
+            button.addEventListener("click", () => {
+              display_comments(sacStories[i].headline.main);
+            });
         }
         for (let i = 0; i < 5; i++) {
             let col = document.getElementsByClassName("row1col right-col")[0];
@@ -219,9 +298,9 @@ export default app
             button.className = "comment-button";
             button.innerText = "comment";
             //Add inner text as image
-            // button.addEventListener("click", () ={
-              
-            // })
+            button.addEventListener("click", () => {
+              display_comments(davisStories[i].headline.main);
+            });
         }
     }
 
@@ -257,10 +336,11 @@ export default app
 
     window.addEventListener("load", init);
     displayDate();
-    createDom(curPage);
+    await createDom(curPage);
     function init() {
         window.addEventListener("scroll", loadMorePagesOnScroll);
         let login_button = document.getElementById("login_button");
         login_button.addEventListener("click", login);
+        redact_comment("This is a comment", "'Sacramento' review: best frenemies");
     }
 })();
