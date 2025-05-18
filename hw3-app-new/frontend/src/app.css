@@ -3,7 +3,7 @@
 */
 @import url("https://db.onlinewebfonts.com/c/00048069ded7ec58aa6b96ccaff5f759?family=Chomsky");
 
-body{
+body:not(.comments-container){
     padding: 20px;
 }
 
@@ -322,7 +322,9 @@ p{
     width: 30%;
     height: 100vh;
     float: right;
-    /* display: flex; */
+    margin: 0px;
+    padding: 0px;
+    /* display: none; */
 }
 
 .comments-contents{

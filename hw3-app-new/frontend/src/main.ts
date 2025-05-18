@@ -240,13 +240,26 @@ export default app
             hr.className = "hr-center";
             populateStories(header, snippet, img, link1, link2, sacStories[i]);
 
-            let button = gridElement.appendChild(document.createElement("button"));
-            button.className = "comment-button";
-            button.innerText = "comment";
+            let commentsButton = gridElement.appendChild(document.createElement("button"));
+            commentsButton.className = "comment-button";
+            commentsButton.id = "comment-button-id";
+            commentsButton.innerText = "comment";
             //Add inner text as image
             button.addEventListener("click", () => {
               display_comments(sacStories[i].headline.main);
             });
+            commentsButton.addEventListener("click", () => {
+              const commentsDiv = document.getElementById("comments-container-id");
+              console.log("Hello");
+              if(commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
+                commentsDiv.style.display = "block";
+              }else{
+                commentsDiv.style.display = "none";
+              }
+
+            })
+            // const commentsContainer = document.getElementById("comments-container");
+
         }
         for (let i = 5; i < 10; i++) {
             let col = document.getElementsByClassName("row1col center-col")[0];
@@ -274,6 +287,14 @@ export default app
             button.addEventListener("click", () => {
               display_comments(sacStories[i].headline.main);
             });
+            const commentsContainer = document.getElementById("comments-container");
+            button.addEventListener("click", () => {
+              if(commentsContainer.style.display === "none"){
+                commentsContainer.style.display = "block";
+              }else{
+                commentsContainer.style.display = "none";
+              }
+            })
         }
         for (let i = 0; i < 5; i++) {
             let col = document.getElementsByClassName("row1col right-col")[0];
@@ -301,6 +322,14 @@ export default app
             button.addEventListener("click", () => {
               display_comments(davisStories[i].headline.main);
             });
+            const commentsContainer = document.getElementById("comments-container");
+            button.addEventListener("click", () => {
+              if(commentsContainer.style.display === "none"){
+                commentsContainer.style.display = "block";
+              }else{
+                commentsContainer.style.display = "none";
+              }
+            })
         }
     }
 
