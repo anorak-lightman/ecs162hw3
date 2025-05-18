@@ -301,3 +301,55 @@ p{
         order: 3;
     }
 } 
+
+.comments-header{
+    border-bottom: 2px solid lightgray;
+    padding: 5px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.close-comments{
+    float: right;
+    background: none;
+    border: none;
+    font-size: 20px;
+    margin: 10px;
+}
+
+.comments-container{
+    background-color: pink;
+    width: 30%;
+    height: 100vh;
+    float: right;
+    /* display: flex; */
+}
+
+.comments-contents{
+    padding-top: 30px;
+    margin: 20px;
+}
+
+#add-comment{
+    width: 370px;
+    height: 20px;
+    padding: 10px;
+}
+
+.cancel-button, .submit-button{
+    border-radius: 5px;
+    border-width: 1px;
+    float: right;
+    margin: 10px 3px;
+    padding: 4px;
+}
+
+.submit-button{
+    background-color: teal;
+    color: white;
+    margin-right: 14px;
+}
+
+.cancel-button{
+    background-color: white;
+}

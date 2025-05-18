@@ -99,6 +99,13 @@ export default app
             let hr = gridElement.appendChild(document.createElement("hr"));
             hr.className = "hr-center";
             populateStories(header, snippet, img, link1, link2, sacStories[i]);
+
+            let button = gridElement.appendChild(document.createElement("button"));
+            button.className = "comment-button";
+            //Add inner text as image
+            // button.addEventListener("click", () ={
+              
+            // })
         }
         for (let i = 5; i < 10; i++) {
             let col = document.getElementsByClassName("row1col center-col")[0];
@@ -118,6 +125,13 @@ export default app
             let hr = gridElement.appendChild(document.createElement("hr"));
             hr.className = "hr-center";
             populateStories(header, snippet, img, link1, link2, sacStories[i]);
+
+            let button = gridElement.appendChild(document.createElement("button"));
+            button.className = "comment-button";
+            //Add inner text as image
+            // button.addEventListener("click", () ={
+              
+            // })
         }
         for (let i = 0; i < 5; i++) {
             let col = document.getElementsByClassName("row1col right-col")[0];
@@ -137,6 +151,13 @@ export default app
             let hr = gridElement.appendChild(document.createElement("hr"));
             hr.className = "hr-center";
             populateStories(header, snippet, img, link1, link2, davisStories[i]);
+
+            let button = gridElement.appendChild(document.createElement("button"));
+            button.className = "comment-button";
+            //Add inner text as image
+            // button.addEventListener("click", () ={
+              
+            // })
         }
     }
 
