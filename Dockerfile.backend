@@ -1,0 +1,14 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Copy files into the image BEFORE the volume mount
+COPY backend/requirements.txt .
+COPY backend/entrypoint.sh .
+RUN chmod +x entrypoint.sh
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/ .
+
+ENV FLASK_APP=app.py
+CMD ["./entrypoint.sh"]
