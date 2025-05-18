@@ -62,7 +62,6 @@ def get_stories(city, pageNumber):
             url = davis_url + api_key + '&page=' + pageNumber
         res = requests.get(url)
         response = json.loads(res.text)
-        # print(response)
         stories = response["response"]["docs"]
         return jsonify({"stories": stories})
     except:

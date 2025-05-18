@@ -176,7 +176,7 @@ export default app
     }
 
     // Retreive location specific stories given a "page number" -> 10 stories per page
-    function getSacStoriesFromBackend(pageNumber: number) {
+    function getSacStoriesFromBackend(pageNumber: number): Promise<[string]> {
       return new Promise((resolve) => {
         fetch("http://localhost:8000/get_stories/sacramento/" + pageNumber)
             .then(response => response.json())
@@ -190,7 +190,7 @@ export default app
     }
 
 
-    function getDavisStoriesFromBackend(pageNumber: number) {
+    function getDavisStoriesFromBackend(pageNumber: number): Promise<[string]> {
       return new Promise((resolve) => {
         fetch("http://localhost:8000/get_stories/davis/" + pageNumber)
             .then(response => response.json())
@@ -370,6 +370,5 @@ export default app
         window.addEventListener("scroll", loadMorePagesOnScroll);
         let login_button = document.getElementById("login_button");
         login_button.addEventListener("click", login);
-        redact_comment("This is a comment", "'Sacramento' review: best frenemies");
     }
 })();
