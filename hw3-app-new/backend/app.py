@@ -38,7 +38,7 @@ davis_url = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q="UC Davi
 # Mongo connection
 mongo_uri = os.getenv("MONGO_URI")
 mongo = MongoClient(mongo_uri)
-# db = mongo.get_default_database()
+db = mongo.get_database()
 
 @app.route('/api/key')
 def get_key():
@@ -103,9 +103,34 @@ def logout():
 def test_mongo():
     return jsonify({"collections": db.list_collection_names()})
 
+def convert_objectid(doc):
+    doc['_id'] = str(doc['_id'])
+    return doc
+
+@app.route("/find_comments/<article_id>")
+def find_comments(article_id):
+    comments_cursor = db.comments.find({"ID": article_id})
+    comments_list = [convert_objectid(doc) for doc in comments_cursor]
+    return jsonify({"comments": comments_list})
+
+@app.route("/insert_article/<article_id>")
+def insert_article(article_id):
+    db.comments.insert_one({"ID": article_id, "comments": []})
+    return None
+
+def find_comments_internal(article_id):
+    comments_cursor = db.comments.find({"ID": article_id})
+    return [convert_objectid(doc) for doc in comments_cursor]
+
+@app.route("/insert_comment/<article_id>/<comment>")
+def insert_comment(article_id, comment):
+    article = find_comments_internal(article_id)
+    if len(article) == 0:
+        insert_article(article_id)
+        db.comments.update_one({"ID": article_id}, {"$push": {"comments": comment}})
+    else:
+        db.comments.update_one({"ID": article_id}, {"$push": {"comments": comment}})
+    return jsonify({"success": article_id})
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)
-
-
-
-
