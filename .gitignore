@@ -1,3 +1,6 @@
 .env
 .env.dev
-.DS_Store
+.env.prod
+node_modules
+package-lock.json
+.DS_STORE
