@@ -312,8 +312,10 @@ export default app
               const commentsDiv = document.getElementById("comments-container-id");
               if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
                 commentsDiv.style.display = "block";
+                document.body.style.backgroundColor = "#c0bcbc";
               } else{
                 commentsDiv.style.display = "none";
+                document.body.style.backgroundColor = "white";
               }
               display_comments(i * pageNumber + 14);
             })
@@ -356,8 +358,10 @@ export default app
               const commentsDiv = document.getElementById("comments-container-id");
               if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
                 commentsDiv.style.display = "block";
+                document.body.style.backgroundColor = "#c0bcbc";
               } else{
                 commentsDiv.style.display = "none";
+                document.body.style.backgroundColor = "white";
               }
               display_comments(i * pageNumber + 14);
             })
@@ -398,8 +402,10 @@ export default app
               const commentsDiv = document.getElementById("comments-container-id");
               if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
                 commentsDiv.style.display = "block";
+                document.body.style.backgroundColor = "#c0bcbc";
               } else{
                 commentsDiv.style.display = "none";
+                document.body.style.backgroundColor = "white";
               }
               display_comments(i * pageNumber + 14);
             })
@@ -446,7 +452,7 @@ export default app
         let submit_comment_button = document.getElementById("submit-button");
         submit_comment_button.addEventListener("click", async () => {
           let comments_title = document.getElementById("comments-title").innerText;
-          let nyt_article = comments_title.replace("Comments for: ", "");
+          let nyt_article = comments_title.replace("Comments For: ", "");
           let text_box = document.getElementById("add-comment") as HTMLInputElement;
           await add_comment_to_article(text_box.value, nyt_article);
           text_box.value = "";
