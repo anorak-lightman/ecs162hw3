@@ -43,7 +43,7 @@ export default app
           }
           clearInterval(myInterval);
           let login_button = document.getElementById("login_button");
-          login_button.innerText = "Logout";
+          login_button.innerText = "LOG OUT";
           login_button.removeEventListener('click', login);
           login_button.addEventListener("click", logout);
         })
@@ -59,7 +59,7 @@ export default app
             let login_button = document.getElementById("login_button");
             login_button.removeEventListener("click", logout);
             login_button.addEventListener("click", login);
-            login_button.innerText = "Login";
+            login_button.innerText = "LOG IN";
             myInterval = setInterval(check_signed_in, 1000);
             user = null;
           }
@@ -315,7 +315,7 @@ export default app
               } else{
                 commentsDiv.style.display = "none";
               }
-              // display_comments(i * pageNumber + 14);
+              display_comments(i * pageNumber + 14);
             })
             // const commentsContainer = document.getElementById("comments-container");
 
@@ -350,15 +350,8 @@ export default app
             commentsButton.appendChild(btnImg);
             //Add inner text as image
             let indexOfStory = i + pageNumber * 14;
-            button.addEventListener("click", () => display_comments(indexOfStory));
+            commentsButton.addEventListener("click", () => display_comments(indexOfStory));
 
-            const commentsContainer = document.getElementById("comments-container");
-            button.addEventListener("click", () => {
-              if(commentsContainer.style.display === "none"){
-                commentsContainer.style.display = "block";
-              }else{
-                commentsContainer.style.display = "none";
-  
             commentsButton.addEventListener("click", () => {
               const commentsDiv = document.getElementById("comments-container-id");
               if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
@@ -366,6 +359,7 @@ export default app
               } else{
                 commentsDiv.style.display = "none";
               }
+              display_comments(i * pageNumber + 14);
             })
         }
         for (let i = 0; i < 5; i++) {
@@ -387,19 +381,6 @@ export default app
             hr.className = "hr-center";
             populateStories(header, snippet, img, link1, link2, davisStories[i]);
 
-            let button = gridElement.appendChild(document.createElement("button"));
-            button.className = "comment-button";
-            button.innerText = "comment";
-            //Add inner text as image
-            let indexOfStory = i + pageNumber * 14;
-            button.addEventListener("click", () => display_comments(indexOfStory));
-            
-            const commentsContainer = document.getElementById("comments-container");
-            button.addEventListener("click", () => {
-              if(commentsContainer.style.display === "none"){
-                commentsContainer.style.display = "block";
-              }else{
-                commentsContainer.style.display = "none";
             let commentsButton = gridElement.appendChild(document.createElement("button"));
             let btnImg = document.createElement("img");
             btnImg.src = "/comment.png"
@@ -409,7 +390,10 @@ export default app
             btnImg.style.width = "30px";
             btnImg.style.height = "30px";
             commentsButton.appendChild(btnImg);
-  
+            //Add inner text as image
+            let indexOfStory = i + pageNumber * 14;
+            commentsButton.addEventListener("click", () => display_comments(indexOfStory));
+
             commentsButton.addEventListener("click", () => {
               const commentsDiv = document.getElementById("comments-container-id");
               if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
@@ -417,6 +401,7 @@ export default app
               } else{
                 commentsDiv.style.display = "none";
               }
+              display_comments(i * pageNumber + 14);
             })
         }
     }

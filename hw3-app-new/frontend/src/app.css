@@ -199,6 +199,89 @@ p{
     border-color: black;
 }
 
+.comments-header{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    border-bottom: 2px solid lightgray;
+    padding: 5px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.close-comments{
+    float: right;
+    background: none;
+    border: none;
+    font-size: 20px;
+    margin: 10px;
+}
+
+.comments-container{
+    position: fixed;
+    background-color: white;
+    width: 34.5%;
+    height: 100vh;
+    float: right;
+    top: 0;
+    right: 0;
+    margin: 0px;
+    padding: 0px;
+    display: none;
+    border-left: 1px solid lightgray
+}
+
+.comments-contents{
+    padding-top: 30px;
+    margin: 20px;
+}
+
+#add-comment{
+    width: 430px;
+    height: 20px;
+    padding: 10px;
+}
+
+.cancel-button, .submit-button{
+    border-radius: 5px;
+    border-width: 1px;
+    float: right;
+    margin: 10px 3px;
+    padding: 4px;
+}
+
+.submit-button{
+    background-color: #567b94;
+    color: white;
+    margin-right: 1px;
+}
+
+.cancel-button{
+    background-color: white;
+}
+
+.comment-button{
+    /* position: absolute;
+    right: 10px; */
+    margin-left: 85%;
+    margin-bottom: 10px;
+    color: black;
+    background-color: white;
+    border-radius: 30px;
+    width: 50px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 5px;
+    border-width: 1px;
+    border-color: lightgrey;
+    box-shadow: none;
+}
+
+#login_button{
+    border-radius: 5px;
+    background-color: #567b94;
+    color: white;
+    top: 5%
+}
 
 
 @media only screen and (max-width: 767px){
@@ -247,6 +330,26 @@ p{
     .right-col{
         order: 3;
     }
+
+    .comments-container{
+    position: fixed;
+    background-color: white;
+    width: 100%;
+    height: 100vh;
+    float: right;
+    top: 0;
+    right: 0;
+    margin: 0px;
+    padding: 0px;
+    display: none;
+    border-left: 1px solid lightgray
+    }
+
+    #add-comment{
+    width: 254px;
+    height: 20px;
+    padding: 10px;
+}
 }
 
 @media only screen and (max-width: 1024px) and (min-width: 768px){
@@ -300,68 +403,24 @@ p{
     .right-col{
         order: 3;
     }
-} 
 
-.comments-header{
-    border-bottom: 2px solid lightgray;
-    padding: 5px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.close-comments{
-    float: right;
-    background: none;
-    border: none;
-    font-size: 20px;
-    margin: 10px;
-}
-
-.comments-container{
-    background-color: pink;
-    width: 30%;
+    .comments-container{
+    position: fixed;
+    background-color: white;
+    width: 52%;
     height: 100vh;
     float: right;
+    top: 0;
+    right: 0;
     margin: 0px;
     padding: 0px;
     display: none;
-}
+    border-left: 1px solid lightgray
+    }
 
-.comments-contents{
-    padding-top: 30px;
-    margin: 20px;
-}
-
-#add-comment{
-    width: 370px;
+    #add-comment{
+    width: 333px;
     height: 20px;
     padding: 10px;
 }
-
-.cancel-button, .submit-button{
-    border-radius: 5px;
-    border-width: 1px;
-    float: right;
-    margin: 10px 3px;
-    padding: 4px;
-}
-
-.submit-button{
-    background-color: teal;
-    color: white;
-    margin-right: 14px;
-}
-
-.cancel-button{
-    background-color: white;
-}
-
-.comment-button{
-    color: black;
-    background-color: white;
-    border-radius: 30px;
-    width: 50px;
-    height: 30px;
-    float: right;
-    align-items: center;
-}
+} 
