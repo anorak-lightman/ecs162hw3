@@ -134,22 +134,6 @@ export default app
               div.appendChild(redact_button);
               redact_button.addEventListener("click", () => redact_comment(comment.innerText, original_nyt_article));
             }
-            // let input_form = document.createElement("input");
-            // input_form.type = "text";
-            // input_form.className = "reply_to_comment";
-            // input_form.id = original_nyt_article;
-            // input_form.name = "add comment";
-            // input_form.placeholder = "Reply to this comment here";
-            // div.appendChild(input_form);
-            // let comment_button = document.createElement("button");
-            // comment_button.className = "comment_button";
-            // comment_button.innerText = "REPLY";
-            // div.appendChild(comment_button);
-            // comment_button.addEventListener("click", () => {
-            //   let text_box = document.getElementById(original_nyt_article) as HTMLInputElement;
-            //   add_comment_to_other_comment(text_box.value, document.getElementById("base-comment").innerText, original_nyt_article);
-            //   text_box.value = "";
-            // });
           } else {
             let comment = document.createElement("p");
             comment.className = "comment";
@@ -316,7 +300,9 @@ export default app
             commentsButton.id = "comment-button-id";
             commentsButton.innerText = "comment";
             //Add inner text as image
-  
+            let indexOfStory = i + pageNumber * 14;
+            commentsButton.addEventListener("click", () => display_comments(indexOfStory));
+            
             commentsButton.addEventListener("click", () => {
               const commentsDiv = document.getElementById("comments-container-id");
               if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
@@ -324,8 +310,7 @@ export default app
               } else{
                 commentsDiv.style.display = "none";
               }
-              display_comments(sacStories[i].headline.main);
-
+              // display_comments(i * pageNumber + 14);
             })
             // const commentsContainer = document.getElementById("comments-container");
 
