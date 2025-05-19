@@ -172,7 +172,6 @@ def insert_comment_to_other_comment(comment_index, comments):
     raw_id = request.args.get("id", "")
     article_id = normalize_quotes(raw_id)
     comments = comments.split(',')
-    app.logger.info(comments)
     db.comments.update_one({"ID": article_id}, {f"$set": {f"comments.{comment_index}": comments}})
     return jsonify({"success": article_id})
 

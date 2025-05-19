@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => ({
     cors: true
   } : undefined,
   test: {
+    globals: true,
     environment: 'jsdom'
   },
   resolve: process.env.VITEST
