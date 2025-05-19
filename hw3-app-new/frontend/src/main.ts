@@ -316,8 +316,7 @@ export default app
             commentsButton.id = "comment-button-id";
             commentsButton.innerText = "comment";
             //Add inner text as image
-            let indexOfStory = i + pageNumber * 14;
-            commentsButton.addEventListener("click", () => display_comments(indexOfStory));
+  
             commentsButton.addEventListener("click", () => {
               const commentsDiv = document.getElementById("comments-container-id");
               if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
@@ -325,7 +324,8 @@ export default app
               } else{
                 commentsDiv.style.display = "none";
               }
-              // display_comments(sacStories[i].headline.main);
+              display_comments(sacStories[i].headline.main);
+
             })
             // const commentsContainer = document.getElementById("comments-container");
 
