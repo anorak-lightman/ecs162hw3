@@ -324,7 +324,7 @@ p{
     float: right;
     margin: 0px;
     padding: 0px;
-    /* display: none; */
+    display: none;
 }
 
 .comments-contents{

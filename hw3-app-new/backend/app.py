@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, session, jsonify, send_from_directory, g
+from flask import Flask, redirect, url_for, session, jsonify, send_from_directory, request
 from authlib.integrations.flask_client import OAuth
 from authlib.common.security import generate_token
 import os
@@ -123,8 +123,14 @@ def convert_objectid(doc):
     doc['_id'] = str(doc['_id'])
     return doc
 
-@app.route("/find_comments/<article_id>")
-def find_comments(article_id):
+def normalize_quotes(s):
+    return s.replace('‘', "'").replace('’', "'").replace('“', '"').replace('”', '"')
+
+@app.route("/find_comments")
+def find_comments():
+    raw_id = request.args.get("id", "")
+    article_id = normalize_quotes(raw_id.strip())
+
     comments_cursor = db.comments.find({"ID": article_id})
     array_form = [convert_objectid(doc) for doc in comments_cursor]
     try:
@@ -134,8 +140,10 @@ def find_comments(article_id):
         return jsonify({"comments": []})
     
 
-@app.route("/insert_article/<article_id>")
-def insert_article(article_id):
+@app.route("/insert_article")
+def insert_article():
+    raw_id = request.args.get("id", "")
+    article_id = normalize_quotes(raw_id)
     db.comments.insert_one({"ID": article_id, "comments": []})
     return None
 
@@ -143,8 +151,10 @@ def find_comments_internal(article_id):
     comments_cursor = db.comments.find({"ID": article_id})
     return [convert_objectid(doc) for doc in comments_cursor]
 
-@app.route("/insert_comment/<article_id>/<comment>")
-def insert_comment(article_id, comment):
+@app.route("/insert_comment/<comment>")
+def insert_comment(comment):
+    raw_id = request.args.get("id", "")
+    article_id = normalize_quotes(raw_id)
     article = find_comments_internal(article_id)
     if len(article) == 0:
         insert_article(article_id)
@@ -153,8 +163,10 @@ def insert_comment(article_id, comment):
         db.comments.update_one({"ID": article_id}, {"$push": {"comments": [comment]}})
     return jsonify({"success": article_id})
 
-@app.route("/insert_comment_to_other_comment/<article_id>/<int:comment_index>/<comments>")
-def insert_comment_to_other_comment(article_id, comment_index, comments):
+@app.route("/insert_comment_to_other_comment/<int:comment_index>/<comments>")
+def insert_comment_to_other_comment(comment_index, comments):
+    raw_id = request.args.get("id", "")
+    article_id = normalize_quotes(raw_id)
     comments = comments.split(',')
     app.logger.info(comments)
     db.comments.update_one({"ID": article_id}, {f"$set": {f"comments.{comment_index}": comments}})

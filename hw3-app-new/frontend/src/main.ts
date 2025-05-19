@@ -24,7 +24,8 @@ export default app
     let curPage = 0;
     let sacStories = [];
     let davisStories = [];
-    
+    let allStories = [];
+
     let myInterval = null;
     let user = null;
     myInterval = setInterval(check_signed_in, 1000);
@@ -93,7 +94,7 @@ export default app
     }
 
     async function get_comments(nyt_article: string): Promise<[[string]]> {
-      return await fetch("http://localhost:8000/find_comments/" + nyt_article)
+      return await fetch("http://localhost:8000/find_comments?id=" + nyt_article)
         .then(response => response.json())
         .then(data => {
           return data.comments;
@@ -103,23 +104,44 @@ export default app
         });
     }
 
+    async function display_comments(indexOfStory: number) {
+      const comment_elements = document.querySelectorAll(".comment");
+      const redact_elements = document.querySelectorAll(".redact_button");
+      comment_elements.forEach(el => el.remove());
+      redact_elements.forEach(el => el.remove());
 
-    async function display_comments(nyt_article: string) {
       let comments_list = [[]];
-      nyt_article = nyt_article.toLowerCase().replaceAll(' ', '-');
+      let nyt_article = allStories[indexOfStory].headline.main;
+      let original_nyt_article = nyt_article;
+      nyt_article = nyt_article.toLowerCase().replaceAll(' ', '-').trim();
       comments_list = await get_comments(nyt_article);
-      console.log(nyt_article);
-      console.log(comments_list);
       let comments_header = document.getElementsByClassName("comments-title")[0];
+      comments_header.innerHTML = "Comments for: " + original_nyt_article;
       for (let i = 0; i < comments_list.length; i++) {
         for (let j = 0; j < comments_list[i].length; i++) {
           if (j === 0) {
             let comment = document.createElement("p");
+            comment.className = "comment";
             comment.innerText = comments_list[i][j].replaceAll('-', ' ');
             comments_header.parentNode.insertBefore(comment, comments_header.nextSibling);
+            if (user === "moderator" || user === "admin") {
+              let redact_button = document.createElement("button");
+              redact_button.innerText = "REDACT";
+              redact_button.className = "redact_button";
+              comments_header.parentNode.insertBefore(redact_button, comment.nextSibling);
+              redact_button.addEventListener("click", () => redact_comment(comment.innerText, original_nyt_article));
+            }
           } else {
             let comment = document.createElement("p");
+            comment.className = "comment";
             comment.innerText = "\t" + comments_list[i][j].replaceAll('-', ' ');
+            if (user === "moderator" || user === "admin") {
+              let redact_button = document.createElement("button");
+              redact_button.innerText = "REDACT";
+              redact_button.className = "redact_button";
+              comments_header.parentNode.insertBefore(redact_button, comment.nextSibling);
+              redact_button.addEventListener("click", () => redact_comment(comment.innerText, original_nyt_article));
+            }
           }
         }
       }
@@ -135,10 +157,10 @@ export default app
       let innerArray = commentsArray[index];
       let indexOfComment = innerArray.findIndex(inner => inner == comment);
       innerArray[indexOfComment] = "COMMENT REMOVED BY MODERATOR!";
-      await fetch("http://localhost:8000/insert_comment_to_other_comment/" + nyt_article + "/" + index + "/" + innerArray)
+      await fetch("http://localhost:8000/insert_comment_to_other_comment/" + index + "/" + innerArray + "?id=" + nyt_article)
         .then(response => response.json())
         .then(() => {
-          display_comments(nyt_article_original);
+          display_comments(allStories.findIndex(story => story.headline.main == nyt_article_original));
         })
         .catch(error => {
           console.error("error redacting comment", error);
@@ -149,10 +171,10 @@ export default app
       let nyt_article_original = nyt_article;
       nyt_article = nyt_article.toLowerCase().replaceAll(' ', '-');
       comment = comment.replaceAll(' ', '-');
-      await fetch("http://localhost:8000/insert_comment/" + nyt_article + "/" + comment)
+      await fetch("http://localhost:8000/insert_comment/" + comment + "?id=" + nyt_article)
         .then(response => response.json())
         .then(() => {
-          display_comments(nyt_article_original);
+          display_comments(allStories.findIndex(story => story.headline.main == nyt_article_original));
         })
         .catch(error => {
           console.error("error adding comment", error);
@@ -176,10 +198,10 @@ export default app
       let comment_and_index = await get_comment_and_append_new_comment(comment, base_comment, original_nyt_article);
       let new_comments = comment_and_index[0];
       let index = comment_and_index[1];
-      await fetch("http://localhost:8000/insert_comment_to_other_comment/" + nyt_article + "/" + index + "/" + new_comments)
+      await fetch("http://localhost:8000/insert_comment_to_other_comment/" + index + "/" + new_comments + "?id=" + nyt_article)
         .then(response => response.json())
         .then(() => {
-          display_comments(original_nyt_article);
+          // display_comments(original_nyt_article);
         })
         .catch(error => {
           console.error("error adding comment from other comment to database", error);
@@ -232,6 +254,8 @@ export default app
           sacStories = await getSacStoriesFromBackend(pageNumber);
           davisStories = await getDavisStoriesFromBackend(pageNumber);
         }
+        allStories.push(...sacStories);
+        allStories.push(...davisStories);
         for (let i = 0; i < 5; i++) {
             let col = document.getElementsByClassName("row1col left-col")[0];
 
@@ -256,6 +280,8 @@ export default app
             commentsButton.id = "comment-button-id";
             commentsButton.innerText = "comment";
             //Add inner text as image
+            let indexOfStory = i + pageNumber * 14;
+            commentsButton.addEventListener("click", () => display_comments(indexOfStory));
             commentsButton.addEventListener("click", () => {
               const commentsDiv = document.getElementById("comments-container-id");
               if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
@@ -263,7 +289,7 @@ export default app
               } else{
                 commentsDiv.style.display = "none";
               }
-              display_comments(sacStories[i].headline.main);
+              // display_comments(sacStories[i].headline.main);
             })
             // const commentsContainer = document.getElementById("comments-container");
 
@@ -377,5 +403,23 @@ export default app
         window.addEventListener("scroll", loadMorePagesOnScroll);
         let login_button = document.getElementById("login_button");
         login_button.addEventListener("click", login);
+        let submit_comment_button = document.getElementById("submit-button");
+        submit_comment_button.addEventListener("click", async () => {
+          let comments_title = document.getElementById("comments-title").innerText;
+          let nyt_article = comments_title.replace("Comments for: ", "");
+          let text_box = document.getElementById("add-comment") as HTMLInputElement;
+          await add_comment_to_article(text_box.value, nyt_article);
+          text_box.value = "";
+        });
+        let cancel_comment_button = document.getElementById("cancel-button");
+        cancel_comment_button.addEventListener("click", () => {
+          let text_box = document.getElementById("add-comment") as HTMLInputElement;
+          text_box.value = "";
+        });
+        let close_comments_button = document.getElementById("close-comments");
+        close_comments_button.addEventListener("click", () => {
+          const commentsDiv = document.getElementById("comments-container-id");
+          commentsDiv.style.display = "none";
+        });
     }
 })();

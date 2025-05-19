@@ -44,17 +44,17 @@
 
         <div class="comments-container" id ="comments-container-id">
             <div class="comments-header">
-                <button class = "close-comments">x</button>
+                <button class = "close-comments" id="close-comments">x</button>
             </div>
             <div class="comments-contents">
-                <h1 class="comments-title">Comments</h1>
+                <h1 class="comments-title" id="comments-title">Comments for article: </h1>
                 <form>
                     <label>
                     <input type="text" id="add-comment" name="add-comment" placeholder="Share your thoughts."><br>
                     </label>
                 </form>
-                <button class="submit-button">SUBMIT</button>
-                <button class="cancel-button">CANCEL</button>
+                <button class="submit-button" id="submit-button">SUBMIT</button>
+                <button class="cancel-button" id="cancel-button">CANCEL</button>
             </div>
         </div>
 
