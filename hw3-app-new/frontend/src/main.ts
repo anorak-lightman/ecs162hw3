@@ -117,33 +117,69 @@ export default app
       comments_list = await get_comments(nyt_article);
       let comments_header = document.getElementsByClassName("comments-title")[0];
       comments_header.innerHTML = "Comments for: " + original_nyt_article;
+      let div = document.createElement("div");
+      comments_header.parentNode.insertBefore(div, comments_header.nextSibling);
       for (let i = 0; i < comments_list.length; i++) {
-        for (let j = 0; j < comments_list[i].length; i++) {
+        for (let j = 0; j < comments_list[i].length; j++) {
           if (j === 0) {
             let comment = document.createElement("p");
             comment.className = "comment";
+            comment.id = "base-comment" + i;
             comment.innerText = comments_list[i][j].replaceAll('-', ' ');
-            comments_header.parentNode.insertBefore(comment, comments_header.nextSibling);
+            div.appendChild(comment);
             if (user === "moderator" || user === "admin") {
               let redact_button = document.createElement("button");
               redact_button.innerText = "REDACT";
               redact_button.className = "redact_button";
-              comments_header.parentNode.insertBefore(redact_button, comment.nextSibling);
+              div.appendChild(redact_button);
               redact_button.addEventListener("click", () => redact_comment(comment.innerText, original_nyt_article));
             }
+            // let input_form = document.createElement("input");
+            // input_form.type = "text";
+            // input_form.className = "reply_to_comment";
+            // input_form.id = original_nyt_article;
+            // input_form.name = "add comment";
+            // input_form.placeholder = "Reply to this comment here";
+            // div.appendChild(input_form);
+            // let comment_button = document.createElement("button");
+            // comment_button.className = "comment_button";
+            // comment_button.innerText = "REPLY";
+            // div.appendChild(comment_button);
+            // comment_button.addEventListener("click", () => {
+            //   let text_box = document.getElementById(original_nyt_article) as HTMLInputElement;
+            //   add_comment_to_other_comment(text_box.value, document.getElementById("base-comment").innerText, original_nyt_article);
+            //   text_box.value = "";
+            // });
           } else {
             let comment = document.createElement("p");
             comment.className = "comment";
-            comment.innerText = "\t" + comments_list[i][j].replaceAll('-', ' ');
+            comment.innerText = comments_list[i][j].replaceAll('-', ' ');
+            div.appendChild(comment);
             if (user === "moderator" || user === "admin") {
               let redact_button = document.createElement("button");
               redact_button.innerText = "REDACT";
               redact_button.className = "redact_button";
-              comments_header.parentNode.insertBefore(redact_button, comment.nextSibling);
+              div.appendChild(redact_button);
               redact_button.addEventListener("click", () => redact_comment(comment.innerText, original_nyt_article));
             }
           }
         }
+        let input_form = document.createElement("input");
+        input_form.type = "text";
+        input_form.className = "reply_to_comment";
+        input_form.id = "form_input" + i;
+        input_form.name = "add comment";
+        input_form.placeholder = "Reply to this comment here";
+        div.appendChild(input_form);
+        let comment_button = document.createElement("button");
+        comment_button.className = "comment_button";
+        comment_button.innerText = "REPLY";
+        div.appendChild(comment_button);
+        comment_button.addEventListener("click", () => {
+          let text_box = document.getElementById("form_input" + i) as HTMLInputElement;
+          add_comment_to_other_comment(text_box.value, document.getElementById("base-comment" + i).innerText, original_nyt_article);
+          text_box.value = "";
+        });
       }
     }
 
@@ -201,7 +237,7 @@ export default app
       await fetch("http://localhost:8000/insert_comment_to_other_comment/" + index + "/" + new_comments + "?id=" + nyt_article)
         .then(response => response.json())
         .then(() => {
-          // display_comments(original_nyt_article);
+          display_comments(allStories.findIndex(story => story.headline.main == original_nyt_article));
         })
         .catch(error => {
           console.error("error adding comment from other comment to database", error);
