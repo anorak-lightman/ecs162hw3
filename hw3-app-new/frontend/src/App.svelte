@@ -87,6 +87,5 @@
         <footer>
             <br>
             <hr class="footer">
-            <!-- <a href="https://developer.nytimes.com"><img src="./images/poweredby_nytimes_200a.png" width = 200px></a> -->
         </footer>
 </main>
