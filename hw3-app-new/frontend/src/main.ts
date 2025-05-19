@@ -186,7 +186,7 @@ export default app
       await fetch("http://localhost:8000/insert_comment_to_other_comment/" + index + "/" + innerArray + "?id=" + nyt_article)
         .then(response => response.json())
         .then(() => {
-          display_comments(allStories.findIndex(story => story.headline.main == nyt_article_original));
+          display_comments(allStories.findIndex(story => story.headline.main === nyt_article_original));
         })
         .catch(error => {
           console.error("error redacting comment", error);
@@ -200,7 +200,7 @@ export default app
       await fetch("http://localhost:8000/insert_comment/" + comment + "?id=" + nyt_article)
         .then(response => response.json())
         .then(() => {
-          display_comments(allStories.findIndex(story => story.headline.main == nyt_article_original));
+          display_comments(allStories.findIndex(story => story.headline.main === nyt_article_original));
         })
         .catch(error => {
           console.error("error adding comment", error);
@@ -227,7 +227,7 @@ export default app
       await fetch("http://localhost:8000/insert_comment_to_other_comment/" + index + "/" + new_comments + "?id=" + nyt_article)
         .then(response => response.json())
         .then(() => {
-          display_comments(allStories.findIndex(story => story.headline.main == original_nyt_article));
+          display_comments(allStories.findIndex(story => story.headline.main === original_nyt_article));
         })
         .catch(error => {
           console.error("error adding comment from other comment to database", error);
@@ -270,7 +270,6 @@ export default app
     async function createDom(pageNumber: number) {
         sacStories = await getSacStoriesFromBackend(pageNumber);
         davisStories = await getDavisStoriesFromBackend(pageNumber);
-        console.log(sacStories);
         if (sacStories[0] == "can't load more") {
           setTimeout(waiting, 12000)
           sacStories = await getSacStoriesFromBackend(pageNumber);
@@ -400,7 +399,7 @@ export default app
             btnImg.style.height = "30px";
             commentsButton.appendChild(btnImg);
             //Add inner text as image
-            let indexOfStory = i + pageNumber * 14;
+            let indexOfStory = i + 10 + pageNumber * 14;
             commentsButton.addEventListener("click", () => display_comments(indexOfStory));
 
             commentsButton.addEventListener("click", () => {
@@ -456,7 +455,7 @@ export default app
         let submit_comment_button = document.getElementById("submit-button");
         submit_comment_button.addEventListener("click", async () => {
           let comments_title = document.getElementById("comments-title").innerText;
-          let nyt_article = comments_title.replace("Comments For: ", "");
+          let nyt_article = comments_title.replace("Comments for: ", "");
           let text_box = document.getElementById("add-comment") as HTMLInputElement;
           if (user === "user" || user === "moderator" || user === "admin") {
             await add_comment_to_article(text_box.value, nyt_article);

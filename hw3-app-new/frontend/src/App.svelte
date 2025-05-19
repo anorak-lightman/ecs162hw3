@@ -47,7 +47,7 @@
                 <button class = "close-comments" id="close-comments">x</button>
             </div>
             <div class="comments-contents">
-                <h1 class="comments-title" id="comments-title">Comments for: </h1>
+                <h1 class="comments-title" id="comments-title">Comments for:</h1>
                 <form>
                     <label>
                     <input type="text" id="add-comment" name="add-comment" placeholder="Share your thoughts."><br>
