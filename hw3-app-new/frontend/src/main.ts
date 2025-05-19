@@ -302,7 +302,7 @@ export default app
             //Add inner text as image
             let indexOfStory = i + pageNumber * 14;
             commentsButton.addEventListener("click", () => display_comments(indexOfStory));
-            
+
             commentsButton.addEventListener("click", () => {
               const commentsDiv = document.getElementById("comments-container-id");
               if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
@@ -338,9 +338,9 @@ export default app
             button.className = "comment-button";
             button.innerText = "comment";
             //Add inner text as image
-            button.addEventListener("click", () => {
-              display_comments(sacStories[i].headline.main);
-            });
+            let indexOfStory = i + pageNumber * 14;
+            button.addEventListener("click", () => display_comments(indexOfStory));
+
             const commentsContainer = document.getElementById("comments-container");
             button.addEventListener("click", () => {
               if(commentsContainer.style.display === "none"){
@@ -373,9 +373,9 @@ export default app
             button.className = "comment-button";
             button.innerText = "comment";
             //Add inner text as image
-            button.addEventListener("click", () => {
-              display_comments(davisStories[i].headline.main);
-            });
+            let indexOfStory = i + pageNumber * 14;
+            button.addEventListener("click", () => display_comments(indexOfStory));
+            
             const commentsContainer = document.getElementById("comments-container");
             button.addEventListener("click", () => {
               if(commentsContainer.style.display === "none"){
