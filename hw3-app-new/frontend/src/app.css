@@ -246,6 +246,7 @@ p{
     float: right;
     margin: 10px 3px;
     padding: 4px;
+    /* top: 50%; */
 }
 
 .submit-button{
@@ -424,3 +425,9 @@ p{
     padding: 10px;
 }
 } 
+
+.comment{
+    margin-top: 15%;
+    border-bottom: 1px solid lightgray;
+    margin-bottom: 20px;
+}
