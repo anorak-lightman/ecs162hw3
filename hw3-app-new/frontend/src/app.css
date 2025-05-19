@@ -226,7 +226,8 @@ p{
     margin: 0px;
     padding: 0px;
     display: none;
-    border-left: 1px solid lightgray
+    border-left: 1px solid lightgray;
+    overflow-y: auto;
 }
 
 .comments-contents{
@@ -428,6 +429,31 @@ p{
 
 .comment{
     margin-top: 15%;
-    border-bottom: 1px solid lightgray;
+    /* border-bottom: 1px solid lightgray; */
     margin-bottom: 20px;
+}
+
+.comment-button{
+    background-color: white;
+    color: #567b94;
+    border: none;
+    font: 12px;
+    border-bottom: 1px solid lightgray;
+    font-weight: bold;
+    /* margin-left:  */
+}
+
+.redact-button{
+    background-color: white;
+    color: lightgray;
+    border: none;
+    font: 12px;
+    font-weight: bold;
+    margin-right: 1px;
+}
+
+.reply_to_comment{
+    width: 430px;
+    height: 20px;
+    padding: 10px;
 }
