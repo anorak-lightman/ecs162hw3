@@ -147,6 +147,10 @@ def insert_article():
     db.comments.insert_one({"ID": article_id, "comments": []})
     return None
 
+def insert_article_internal(article_id):
+    db.comments.insert_one({"ID": article_id, "comments":[]})
+    return None
+
 def find_comments_internal(article_id):
     comments_cursor = db.comments.find({"ID": article_id})
     return [convert_objectid(doc) for doc in comments_cursor]
@@ -157,7 +161,7 @@ def insert_comment(comment):
     article_id = normalize_quotes(raw_id)
     article = find_comments_internal(article_id)
     if len(article) == 0:
-        insert_article(article_id)
+        insert_article_internal(article_id)
         db.comments.update_one({"ID": article_id}, {"$push": {"comments": [comment]}})
     else:
         db.comments.update_one({"ID": article_id}, {"$push": {"comments": [comment]}})

@@ -107,8 +107,12 @@ export default app
     async function display_comments(indexOfStory: number) {
       const comment_elements = document.querySelectorAll(".comment");
       const redact_elements = document.querySelectorAll(".redact_button");
+      const input_elements = document.querySelectorAll(".reply_to_comment");
+      const reply_elements = document.querySelectorAll(".comment_button");
       comment_elements.forEach(el => el.remove());
       redact_elements.forEach(el => el.remove());
+      input_elements.forEach(el => el.remove());
+      reply_elements.forEach(el => el.remove());
 
       let comments_list = [[]];
       let nyt_article = allStories[indexOfStory].headline.main;
@@ -148,22 +152,24 @@ export default app
             }
           }
         }
-        let input_form = document.createElement("input");
-        input_form.type = "text";
-        input_form.className = "reply_to_comment";
-        input_form.id = "form_input" + i;
-        input_form.name = "add comment";
-        input_form.placeholder = "Reply to this comment here";
-        div.appendChild(input_form);
-        let comment_button = document.createElement("button");
-        comment_button.className = "comment_button";
-        comment_button.innerText = "REPLY";
-        div.appendChild(comment_button);
-        comment_button.addEventListener("click", () => {
-          let text_box = document.getElementById("form_input" + i) as HTMLInputElement;
-          add_comment_to_other_comment(text_box.value, document.getElementById("base-comment" + i).innerText, original_nyt_article);
-          text_box.value = "";
-        });
+        if (user === "user" || user === "moderator" || user === "admin") {
+          let input_form = document.createElement("input");
+          input_form.type = "text";
+          input_form.className = "reply_to_comment";
+          input_form.id = "form_input" + i;
+          input_form.name = "add comment";
+          input_form.placeholder = "Reply to this comment here";
+          div.appendChild(input_form);
+          let comment_button = document.createElement("button");
+          comment_button.className = "comment_button";
+          comment_button.innerText = "REPLY";
+          div.appendChild(comment_button);
+          comment_button.addEventListener("click", () => {
+            let text_box = document.getElementById("form_input" + i) as HTMLInputElement;
+            add_comment_to_other_comment(text_box.value, document.getElementById("base-comment" + i).innerText, original_nyt_article);
+            text_box.value = "";
+          });
+        } 
       }
     }
 
@@ -264,6 +270,7 @@ export default app
     async function createDom(pageNumber: number) {
         sacStories = await getSacStoriesFromBackend(pageNumber);
         davisStories = await getDavisStoriesFromBackend(pageNumber);
+        console.log(sacStories);
         if (sacStories[0] == "can't load more") {
           setTimeout(waiting, 12000)
           sacStories = await getSacStoriesFromBackend(pageNumber);
@@ -317,7 +324,6 @@ export default app
                 commentsDiv.style.display = "none";
                 document.body.style.backgroundColor = "white";
               }
-              display_comments(i * pageNumber + 14);
             })
             // const commentsContainer = document.getElementById("comments-container");
 
@@ -363,7 +369,6 @@ export default app
                 commentsDiv.style.display = "none";
                 document.body.style.backgroundColor = "white";
               }
-              display_comments(i * pageNumber + 14);
             })
         }
         for (let i = 0; i < 5; i++) {
@@ -407,7 +412,6 @@ export default app
                 commentsDiv.style.display = "none";
                 document.body.style.backgroundColor = "white";
               }
-              display_comments(i * pageNumber + 14);
             })
         }
     }
@@ -454,7 +458,9 @@ export default app
           let comments_title = document.getElementById("comments-title").innerText;
           let nyt_article = comments_title.replace("Comments For: ", "");
           let text_box = document.getElementById("add-comment") as HTMLInputElement;
-          await add_comment_to_article(text_box.value, nyt_article);
+          if (user === "user" || user === "moderator" || user === "admin") {
+            await add_comment_to_article(text_box.value, nyt_article);
+          }
           text_box.value = "";
         });
         let cancel_comment_button = document.getElementById("cancel-button");
