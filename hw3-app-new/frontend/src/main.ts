@@ -294,11 +294,16 @@ export default app
             let hr = gridElement.appendChild(document.createElement("hr"));
             hr.className = "hr-center";
             populateStories(header, snippet, img, link1, link2, sacStories[i]);
-
+            
             let commentsButton = gridElement.appendChild(document.createElement("button"));
+            let btnImg = document.createElement("img");
+            btnImg.src = "/comment.png"
             commentsButton.className = "comment-button";
             commentsButton.id = "comment-button-id";
-            commentsButton.innerText = "comment";
+            btnImg.alt = "comment";
+            btnImg.style.width = "30px";
+            btnImg.style.height = "30px";
+            commentsButton.appendChild(btnImg);
             //Add inner text as image
             let indexOfStory = i + pageNumber * 14;
             commentsButton.addEventListener("click", () => display_comments(indexOfStory));
@@ -334,9 +339,15 @@ export default app
             hr.className = "hr-center";
             populateStories(header, snippet, img, link1, link2, sacStories[i]);
 
-            let button = gridElement.appendChild(document.createElement("button"));
-            button.className = "comment-button";
-            button.innerText = "comment";
+            let commentsButton = gridElement.appendChild(document.createElement("button"));
+            let btnImg = document.createElement("img");
+            btnImg.src = "/comment.png"
+            commentsButton.className = "comment-button";
+            commentsButton.id = "comment-button-id";
+            btnImg.alt = "comment";
+            btnImg.style.width = "30px";
+            btnImg.style.height = "30px";
+            commentsButton.appendChild(btnImg);
             //Add inner text as image
             let indexOfStory = i + pageNumber * 14;
             button.addEventListener("click", () => display_comments(indexOfStory));
@@ -347,6 +358,13 @@ export default app
                 commentsContainer.style.display = "block";
               }else{
                 commentsContainer.style.display = "none";
+  
+            commentsButton.addEventListener("click", () => {
+              const commentsDiv = document.getElementById("comments-container-id");
+              if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
+                commentsDiv.style.display = "block";
+              } else{
+                commentsDiv.style.display = "none";
               }
             })
         }
@@ -382,6 +400,22 @@ export default app
                 commentsContainer.style.display = "block";
               }else{
                 commentsContainer.style.display = "none";
+            let commentsButton = gridElement.appendChild(document.createElement("button"));
+            let btnImg = document.createElement("img");
+            btnImg.src = "/comment.png"
+            commentsButton.className = "comment-button";
+            commentsButton.id = "comment-button-id";
+            btnImg.alt = "comment";
+            btnImg.style.width = "30px";
+            btnImg.style.height = "30px";
+            commentsButton.appendChild(btnImg);
+  
+            commentsButton.addEventListener("click", () => {
+              const commentsDiv = document.getElementById("comments-container-id");
+              if (commentsDiv?.style.display === "none" || commentsDiv?.style.display === ""){
+                commentsDiv.style.display = "block";
+              } else{
+                commentsDiv.style.display = "none";
               }
             })
         }
