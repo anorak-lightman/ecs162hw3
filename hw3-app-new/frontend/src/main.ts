@@ -466,6 +466,7 @@ export default app
         close_comments_button.addEventListener("click", () => {
           const commentsDiv = document.getElementById("comments-container-id");
           commentsDiv.style.display = "none";
+          document.body.style.backgroundColor = "white";
         });
     }
 })();
